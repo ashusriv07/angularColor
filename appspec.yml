@@ -1,0 +1,30 @@
+version : 0.0
+os : linux
+
+files:
+  - source: /
+    destination: /var/www/
+
+permissions:
+  - object: /var/www/
+    owner: ubuntu
+    group: ubuntu
+    mode: 777
+    type:
+      - file
+hooks:
+  ApplicationStop:
+    - location: remove_archives.sh
+      runas: root
+  BeforeInstall:
+    # - location: deregister_from_elb.sh
+    - location: delete-old.sh
+    - location: stop.sh
+      runas: root
+  AfterInstall:
+    - location: sleep.sh
+    - location: start.sh
+    # - location: register_with_elb.sh
+    - location: move-files.sh
+    # - location: forever.sh
+      runas: root

@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12
+    commands:
+      # Update libs
+      #- sudo apt-get update
+  pre_build:
+    commands:
+      - npm install
+      - npm install -g @angular/cli
+  build:
+    commands:
+      - export NODE_OPTIONS=--max_old_space_size=8092
+      - ng build --prod --aot --outputHashing=all
+      - mv $CODEBUILD_SRC_DIR/appspec.yml ./dist/
+      - mv $CODEBUILD_SRC_DIR/deploy-scripts/* ./dist/
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: no
+  base-directory: 'dist*'
